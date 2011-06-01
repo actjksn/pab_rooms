@@ -1,0 +1,6 @@
+; $Id$
+
+name = User Alter
+description = Custom module to remove 'Request New Password' from User Login
+core = 6.x
+package = Custom

@@ -1,0 +1,6 @@
+; $Id$
+
+name = Room Reservation
+description = A module that takes datetime and create reserved blocks
+core = 6.x
+package = Custom

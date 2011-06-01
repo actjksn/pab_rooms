@@ -1,0 +1,16 @@
+<?php
+
+/**
+ * Implementation of hook_form_alter()
+ */
+ 
+function user_alter_form_alter($form_id, &$form) {
+  if($form_id['#id'] == 'user-login-form') {
+    unset($form['links']);
+    $items = array();
+    if (variable_get('user_register', 0) == 0) {
+      $items[] = t('');
+    }
+    $form_id['links'] = ('');
+  }
+}

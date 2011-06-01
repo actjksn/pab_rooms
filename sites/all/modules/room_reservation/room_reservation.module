@@ -1,0 +1,136 @@
+<?php 
+
+/**
+ *
+ * Implementation of hook_form_alter()
+ * This implementation just checks $form_id for now.
+ * Technically, this hook does nothing right now...since it's just a place holder.
+ */
+ 
+function room_reservation_form_alter(&$form, &$form_state, $form_id) {
+  // room_reservation_node_form
+  if($form_id == 'room_reservation_node_form') {
+    unset($form['options']);
+  }
+}
+
+
+function room_reservation_check($from_date, $end_date, $room) {
+  //$sql = "SELECT field_date_value, field_date_value2 FROM {content_field_date}";
+  $sql = "SELECT d.field_date_value, d.field_date_value2, r.field_room_value FROM {content_field_date} d,  {content_type_room_reservation} r WHERE d.nid = r.nid";
+  $result = db_query($sql);
+  
+  $reservation_conflict = FALSE;
+  
+  while ($row = db_fetch_object($result)) {    
+    // case, start times / end times are equal
+    if (($room == $row->field_room_value) && (($from_date == $row->field_date_value) || ($end_date == $row->field_date_value2))) {
+      $reservation_conflict = TRUE;
+      break;
+    }
+    // if the start time is in between a booked time slot
+    elseif (($room == $row->field_room_value) && (($from_date >= $row->field_date_value) && ($from_date < $row->field_date_value2))) {
+      $reservation_conflict = TRUE;
+      break;
+    }
+    // if the end time is in between a booked time slot
+    elseif (($room == $row->field_room_value) && ((($end_date > $row->field_date_value) && $end_date <= $row->field_date_value2))) {
+      $reservation_conflict = TRUE;
+      break;
+    }
+  } 
+  return $reservation_conflict;
+}
+
+function reservation_exist($nid) {
+  $sql = "SELECT nid FROM {content_field_date} WHERE nid = %d";
+  $result = db_query($sql, $nid);
+  
+  return(int) db_result($result);
+}
+
+/**
+ *
+ * Implementation of hook_nodeapi()
+ */
+
+function room_reservation_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
+  $reservation_types = variable_get('reservation_type_select', 0);
+  foreach ($reservation_types as $name => $setting) {
+    if (($node->type == $setting) && ($setting != '0')) {
+      if(reservation_exist($node->nid) == 0){
+        switch ($op) {
+          case 'validate':
+            // I would want to run a validation check against the rest of the DB here; however if it's waiting for approval on an edit, we don't want this to run.
+            $from_date = $node->field_date[0]['value'];
+            $end_date = $node->field_date[0]['value2'];
+            $room = $node->field_room[0]['value'];
+            /* $t_f = room_reservation_check($from_date, $end_date);
+            print $t_f; */
+            if (room_reservation_check($from_date, $end_date, $room)) {
+              form_set_error('field_date[value][month]', 'Conflict was found! There has already been a reservation made for that time slot.');
+            }    
+        }
+      }
+    }
+  }
+}
+
+/**
+ *
+ * Implementation of hook_menu().
+ *
+ * Registers page callbacks with Drupal's central menu system.
+ */
+ 
+function room_reservation_menu() {
+  $items = array();
+  
+  $items['admin/settings/room_reservation'] = array(
+    'title' => 'Room Reservation Settings',
+    'description' => 'Configuration settings for the Room Reservation module',
+    'page callback' => 'admin_settings_room_reservation',
+    'access callback' => 'user_access',
+    'access arguments' => array('administer site configuration'),
+  );
+  
+  return $items;
+}
+
+function admin_settings_room_reservation() {
+  return drupal_get_form('room_reservation_settings_form');
+}
+
+function room_reservation_settings_form() {
+  $form = array();
+  
+  $form['reservation_type_select'] = array(
+    '#type' => 'checkboxes',
+    '#title' => 'Node Types',
+    '#description' => 'Please select the node types, you would like Room Reservations to affect.',
+    '#options' => node_get_types('names'),
+    '#default_value' => variable_get('reservation_type_select', 0),
+  );
+     
+    
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Save settings'),
+  );
+  
+  return $form;
+}
+
+/*function room_reservation_settings_form_validate(&$form, &$form_state) {
+  dsm($form_state);
+}*/
+
+function room_reservation_settings_form_submit(&$form, &$form_state) {
+  variable_set('reservation_type_select', $form_state['values']['reservation_type_select']);
+  
+  drupal_set_message($message='The configuration options have been saved.');
+}
+
+
+
+
