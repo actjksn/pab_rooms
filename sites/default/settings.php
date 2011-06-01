@@ -89,7 +89,7 @@
  *   $db_url = 'mysqli://username:password@localhost/databasename';
  *   $db_url = 'pgsql://username:password@localhost/databasename';
  */
-$db_url = 'mysqli://rooms_admin:%40ccess%21@localhost/pab_rooms';
+$db_url = 'mysqli://pab_rooms:v@Br24!K@localhost/pab_rooms';
 $db_prefix = '';
 
 /**
