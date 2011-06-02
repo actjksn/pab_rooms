@@ -18,7 +18,7 @@
 ?>
 <div class="<?php print $granularity ?> <?php print $class; ?>"> 
 <?php
-  if (isset($_GET['rooms']) && ($_GET['rooms'] != 'any') {
+  if (isset($_GET['rooms']) && ($_GET['rooms'] != 'any')) {
     print 'hello';
   }
   else {
