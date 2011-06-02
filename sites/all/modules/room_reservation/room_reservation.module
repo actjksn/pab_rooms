@@ -9,8 +9,6 @@
  
 function room_reservation_form_alter(&$form, &$form_state, $form_id) {
   // room_reservation_node_form
-  //dsm($form);
-  //dsm($form_state);
   if($form_id == 'room_reservation_node_form') {
     unset($form['options']);
   }
