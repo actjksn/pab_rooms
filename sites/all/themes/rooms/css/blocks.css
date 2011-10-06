@@ -90,3 +90,14 @@
 
 #block-user-3 /* "Who's online" block for a list of the online users */ {
 }
+
+#block-menu-menu-user-buttons ul {
+  text-align: center;
+}
+
+#block-menu-menu-user-buttons ul li /* Block for the easier to use buttons */{
+  display: inline;
+  list-style-image: none;
+  list-style-type: none;
+  margin: 20px;
+}

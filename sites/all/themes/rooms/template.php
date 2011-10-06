@@ -152,3 +152,15 @@ function rooms_preprocess_block(&$vars, $hook) {
   $vars['sample_variable'] = t('Lorem ipsum.');
 }
 // */
+
+/**
+ * Implements theme_menu_item_link()
+ */
+function rooms_menu_item_link($link) {
+  // Allows for images as menu items. Just supply the path to the image as the title
+  if (strpos($link['title'], '.png') !== false || strpos($link['title'], '.jpg') !== false || strpos($link['title'], '.gif') !== false) {
+    $link['title'] = '<img alt="'. $link['description'] .'" title="'. $link['description'] .'" src="'. url($link['title']) .'" />';
+    $link['localized_options']['html'] = TRUE;
+  }
+  return zen_menu_item_link($link); // Let Zen take over from here.
+}
