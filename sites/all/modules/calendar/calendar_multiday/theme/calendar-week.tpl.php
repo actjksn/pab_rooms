@@ -45,6 +45,7 @@ $index = 0;
     </tr>
   </thead>
   <tbody>
+    <?php $multiday_rows = 5; ?>
     <?php for ($i = 0; $i < $multiday_rows; $i++): ?>
     <?php 
       $colpos = 0; 
@@ -76,7 +77,8 @@ $index = 0;
           <?php $colpos = $cell['wday'] + $cell['colspan']; ?>
         <?php endif; ?>
       <?php endfor; ?>  
-      <?php for($j = $colpos; $j < 7; $j++) : ?>
+      <?php for($j = $colpos; $j < 5; $j++) : ?>
+      <?php echo $j; ?>
       <td class="multi-day no-entry"><div class="inner">&nbsp;</div></td>
       <?php endfor;?>
     </tr>

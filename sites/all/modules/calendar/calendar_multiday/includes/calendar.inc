@@ -85,13 +85,12 @@ function calendar_build_month(&$curday, $view, $items) {
     $week_rows = calendar_build_week($curday, $view, $items, TRUE);
     $multiday_buckets = $week_rows['multiday_buckets'];
     $singleday_buckets = $week_rows['singleday_buckets'];
-   
+    
     $total_rows = $week_rows['total_rows'];
    
     // Theme each row
     $output = "";
     $final_day = clone($curday);
- 
     $iehint = 0;
     $max_multirow_cnt = 0;
     $max_singlerow_cnt = 0;
@@ -121,6 +120,7 @@ function calendar_build_month(&$curday, $view, $items) {
       }
      
       $curday = clone($init_day);
+
  
       // move backwards to the first day of the week
       $day_wday = date_format($curday, 'w');

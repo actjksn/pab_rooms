@@ -33,4 +33,3 @@
     print "<a href=\"/node/add/room-reservation/?edit[field_date][value][date]=".date(substr($url, -5, 2)."/$day/Y")."&edit[field_date][value2][date]=".date(substr($url, -5, 2)."/$day/Y")."\">$day</a>";
   }
 ?></div>
-

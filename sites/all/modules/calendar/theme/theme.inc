@@ -75,7 +75,7 @@ function template_preprocess_calendar_main(&$vars) {
     $href = 'node/add/'. str_replace('_', '-', $view->date_info->calendar_date_link);
     $query = 'destination='. $view->date_info->url;    
     $vars['calendar_links']['calendar calendar-add'] = $base + array(
-      'title' => t('Add+'), 
+      'title' => t('Add$'), 
       'href' => $href, 
       'query' => $query,
       );

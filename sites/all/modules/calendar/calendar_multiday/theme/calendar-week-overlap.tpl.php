@@ -31,12 +31,14 @@
 
 <div class="calendar-calendar"><div class="week-view">
   <div id="header-container">
-  <table class="full">
+  <table class="full-header">
   <tbody>
     <tr class="holder"><td class="calendar-time-holder"></td><td class="calendar-day-holder"></td><td class="calendar-day-holder"></td><td class="calendar-day-holder"></td><td class="calendar-day-holder"></td><td class="calendar-day-holder"></td><td class="calendar-day-holder"></td><td class="calendar-day-holder"></td></tr>
     <tr>
-      <th class="calendar-agenda-hour">&nbsp;</th>
+      <th class="calendar-agenda-hour" style="width: 2%">&nbsp;</th>
       <?php foreach ($day_names as $cell): ?>
+        <?php if(($cell['data'] == 'Sat' ) || ($cell['data'] == 'Sun' ) ): break;?>
+        <?php endif; ?>
         <th class="<?php print $cell['class']; ?>">
           <?php print $cell['data']; ?>
         </th>
@@ -120,13 +122,13 @@
       <tbody>
         <tr class="holder"><td class="calendar-time-holder"></td><td class="calendar-day-holder"></td><td class="calendar-day-holder"></td><td class="calendar-day-holder"></td><td class="calendar-day-holder"></td><td class="calendar-day-holder"></td><td class="calendar-day-holder"></td><td class="calendar-day-holder"></td></tr>
         <tr>
-          <?php for ($index = 0; $index < 8; $index++): ?>
+          <?php for ($index = 0; $index < 6; $index++): ?>
           <?php if ($index == 0 ): ?>
-          <td class="first">
-          <?php elseif ($index == 7 ) : ?>
-          <td class="last">
+          <td class="first" style="width:8%">
+          <?php elseif ($index == 5 ) : ?>
+          <td class="last" style="width:19%">
           <?php else : ?>
-          <td>
+          <td style="width:18.25%">
           <?php endif; ?>
             <?php foreach ($start_times as $time_cnt => $start_time): ?>
               <?php 

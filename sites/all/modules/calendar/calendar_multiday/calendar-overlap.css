@@ -1,8 +1,8 @@
 /** Overlapping week items **/
 .calendar-calendar tr.holder {
   height : 0px;
-   display: table-row !important;
-   display : none;
+  display: table-row !important;
+  visibility: hidden; 
 }
 
 .calendar-calendar .week-view .full div.item-wrapper, 
@@ -44,6 +44,7 @@
   font-size : 1px;
   height : 4px;
   line-height : 1px;
+  visibility: hidden;
 }
 
 .calendar-calendar .week-view #multi-day-container,
@@ -52,10 +53,12 @@
 .calendar-calendar .day-view #single-day-container {
 	position : relative;
 	background : #ffffff;
-	overflow-y : scroll;
+	overflow-y : auto;
 	overflow-x : hidden;
   border-left : 1px solid #CCCCCC;
   border-bottom : 1px solid #CCCCCC;
+  min-height: 712px;
+  border-right: 1px solid #CCCCCC;
 }
 
 .calendar-calendar .week-view #multi-day-container,
@@ -65,14 +68,15 @@
 
 .calendar-calendar .week-view #week-header-container,
 .calendar-calendar .day-view #day-header-container {
-	width : 100%;
+	width : 925px;
 	background : #ffffff;
   border-bottom : 1px solid #CCCCCC;
 }
 
 .calendar-calendar .week-view #multi-day-container,
 .calendar-calendar .day-view #multi-day-container {
-	height : 57px;
+  height: 57px;
+  display: none;
 }
 
 .calendar-calendar .week-view #multi-day-container .expand {
@@ -102,6 +106,7 @@
 	padding : 0px;
 	border-top : 0px;
 	border-bottom : 0px;
+
 }
 
 .calendar-calendar .week-view #single-day-container table td.first,
@@ -125,15 +130,30 @@
 }
 
 .calendar-calendar .week-view table.full {
-	table-layout : fixed;
+	table-layout : auto;
 	width : 925px;
-	margin : 0px;
+
+}
+.calendar-calendar .week-view table.full-header {
+  border-top: none;
+	table-layout : auto;
+	width : 925px !important;
+  margin-left: 8%;
+}
+
+.calendar-calendar .week-view table.full-header th {
+  width: 18.35%;
+}
+
+.calendar-calendar .week-view table.full-header th.calendar-agenda-hour {
+  display: none;
 }
 
 .calendar-calendar .day-view table.full {
   table-layout : fixed;
   width : 923px;
   margin : 0px;
+
 }
 
 .calendar-calendar td.calendar-agenda-hour .calendar-hour,
@@ -157,6 +177,7 @@
 .calendar-calendar .week-view .full .calendar-agenda-hour div,
 .calendar-calendar .day-view .full .calendar-agenda-hour div {
 	margin-top : 10px;
+	margin-top : 10px;
 }
 
 .calendar-calendar .day-view .full td.calendar-time-holder,
@@ -170,6 +191,21 @@
 	padding : 0px;
   border : 0px;
 	width : 125px;
+}
+
+.calendar-calendar .day-view .full-header td.calendar-time-holder,
+.calendar-calendar .week-view .full-header td.calendar-time-holder {
+	width : 50px;
+  padding : 0px;
+  border : 0px;
+  z-index: 1000; /* for IE compatability with visbility issues */
+}
+
+.calendar-calendar .week-view .full-header td.calendar-day-holder {
+	padding : 0px;
+  border : 0px;
+	width : 125px;
+  z-index: 1000; /* for IE compatability with visbility issues */
 }
 
 .calendar-calendar .day-view .full td.calendar-day-holder {
@@ -719,7 +755,7 @@
 }
 
 .calendar-calendar .week-view div.single-day .i_0.md_0 .view-item .calendar {
-    width : 115px !important;
+    width : 160px !important;
     width : auto;
 }
 

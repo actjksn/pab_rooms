@@ -43,7 +43,10 @@ function template_preprocess_calendar_main(&$vars) {
     $view->date_info->day = date_format($current_date, 'd');
   }
   if (empty($view->date_info->week) || $view->date_info->week == $view->argument['date_argument']->options['wildcard']) {
-    $view->date_info->week = date_week($view->date_info->year .'-'. date_pad($view->date_info->month) .'-'. date_pad($view->date_info->day));
+    //$view->date_info->week = date_week($view->date_info->year .'-'. date_pad($view->date_info->month) .'-'. date_pad($view->date_info->day));
+    // slightly hackish, beacuse it alters the module core - JL 10132011
+    $view->date_info->week = date('W'); // fixes date for current week as opposed to first week of calendar month
+    
   }
 
   $calendar_links = array();
@@ -56,6 +59,7 @@ function template_preprocess_calendar_main(&$vars) {
   }
   if (!empty($displays['week'])) {
     $calendar_links[] = $base + array('title' => date_t('Week', 'datetime'), 'href' => date_real_url($view, 'week'));
+    //echo date_real_url($view, 'week');
   }
   if (!empty($displays['day'])) {
     $calendar_links[] = $base + array('title' => date_t('Day', 'datetime'), 'href' => date_real_url($view, 'day'));
