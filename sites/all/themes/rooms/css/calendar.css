@@ -314,12 +314,6 @@ table.calendar-legend tr.even .stripe {
   border:1px solid #ccc;
 }
 
-.calendar-calendar th.days.sat,
-.calendar-calendar th.days.sun {
-  display: none;
-  visibility: hidden;
-}
-
 .calendar-calendar td.empty {
   background:#ccc;
   border-color:#ccc;
