@@ -14,10 +14,19 @@ function room_reservation_form_alter(&$form, &$form_state, $form_id) {
   }
 }
 
+function check_reservation_status($nid) { // this function will check about a 'conflicting' request's status
+      $sql_status = "SELECT sid FROM workflow_node WHERE nid = %d";
+      $sql_result = db_query($sql_status, $nid);
+      $row = db_fetch_object($sql_result);
+      $status = $row->sid;
+      
+      return $status;
+}
+
 
 function room_reservation_check($from_date, $end_date, $room) {
   //$sql = "SELECT field_date_value, field_date_value2 FROM {content_field_date}";
-  $sql = "SELECT d.field_date_value, d.field_date_value2, r.field_room_value FROM {content_field_date} d,  {content_type_room_reservation} r WHERE d.nid = r.nid";
+  $sql = "SELECT d.nid, d.field_date_value, d.field_date_value2, r.field_room_value FROM {content_field_date} d,  {content_type_room_reservation} r WHERE d.nid = r.nid";
   $result = db_query($sql);
   
   $reservation_conflict = FALSE;
@@ -25,19 +34,31 @@ function room_reservation_check($from_date, $end_date, $room) {
   while ($row = db_fetch_object($result)) {    
     // case, start times / end times are equal
     if (($room == $row->field_room_value) && (($from_date == $row->field_date_value) || ($end_date == $row->field_date_value2))) {
+      $status = check_reservation_status($row->nid);
+      if ($status == "4") {
+        continue;
+      }
       $reservation_conflict = TRUE;
       break;
     }
     // if the start time is in between a booked time slot
     elseif (($room == $row->field_room_value) && (($from_date >= $row->field_date_value) && ($from_date < $row->field_date_value2))) {
+      $status = check_reservation_status($row->nid);
+      if ($status == "4") {
+        continue;
+      }
       $reservation_conflict = TRUE;
       break;
-    }
+      }   
     // if the end time is in between a booked time slot
     elseif (($room == $row->field_room_value) && ((($end_date > $row->field_date_value) && $end_date <= $row->field_date_value2))) {
+      $status = check_reservation_status($row->nid);
+      if ($status == "4") {
+        continue;
+      }
       $reservation_conflict = TRUE;
       break;
-    }
+      }
   } 
   return $reservation_conflict;
 }
@@ -68,8 +89,8 @@ function room_reservation_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
             /* $t_f = room_reservation_check($from_date, $end_date);
             print $t_f; */
             if (room_reservation_check($from_date, $end_date, $room)) {
-              form_set_error('field_date[value][month]', 'Conflict was found! There has already been a reservation made for that time slot.');
-            }    
+              form_set_error('field_date[value][month]', 'Conflict was found! There has already been a reservation request made for that time slot.');
+            }  
         }
       }
     }
