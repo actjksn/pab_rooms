@@ -1,0 +1,134 @@
+/* $Id: print.css,v 1.8.2.1 2010/06/26 15:36:04 johnalbin Exp $ */
+
+/**
+ * @file
+ * Print styling
+ *
+ * We provide some sane print styling for Drupal using Zen's layout method.
+ */
+
+
+/* underline all links */
+a:link,
+a:visited {
+  text-decoration: underline !important;
+}
+
+/* Don't underline header */
+#site-name a:link,
+#site-name a:visited {
+  text-decoration: none !important;
+}
+
+/* CSS2 selector to add visible href after links */
+#content a:link:after,
+#content a:visited:after {
+  content: " (" attr(href) ") ";
+  font-size: 0.8em;
+  font-weight: normal;
+}
+
+/* Un-float the content */
+#content,
+#content .section {
+  float: none;
+  width: 100%;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* Turn off any background colors or images */
+body,
+#page-wrapper,
+#page,
+#main-wrapper,
+#main,
+#content,
+#content .section {
+  border: 0;
+  margin: 0;
+  color: #000;
+  background-color: transparent !important;
+  background-image: none !important;
+  display: none !important!;
+  padding: 0;
+  float: none !important;
+}
+
+a#logo {
+  display: none;
+}
+
+/* Hide sidebars and nav elements */
+#skip-link,
+#navigation,
+.region-sidebar-first,
+.region-sidebar-second,
+#footer,
+.breadcrumb,
+div.tabs,
+.links,
+.taxonomy,
+.book-navigation,
+.forum-topic-navigation,
+.pager,
+.feed-icons {
+  visibility: hidden;
+  display: none;
+}
+
+
+
+/* If you un-comment the "page { overflow-y: hidden; }" ruleset, Firefox clips
+   the content after the first page. */
+#page-wrapper {
+  overflow-y: visible;
+  overflow-x: visible;
+}
+
+/* This area will be removing some calendar elements 
+ * or trying to anyway... */
+.views-exposed-widget {
+  display: none;
+}
+
+.date-prev,
+.date-next {
+  display:none;
+}
+
+h1.title {
+  display: none;
+}
+
+.calendar-calendar .week-view table.full-header {
+  margin-bottom: 5%;
+  margin-left: 8.5%;
+}
+.calendar-calendar .week-view table.full-header th {
+  width:18.10%;
+}
+
+
+.calendar-calendar .week-view table.full {
+  table-layout: auto;
+  margin-bottom: 10%;
+  width: 100%;
+}
+
+.calendar-calendar .week-view .full div.calendar-agenda-hour span {
+  padding-right: 5px;
+}
+
+div .attachment,
+div .attachment-after{
+  width: 96%;
+}
+
+.attachment div {
+  max-height: 50%;
+}
+
+.calendar-calendar td.last {
+  border-right: 1px solid red;  
+}

@@ -55,9 +55,9 @@
 	background : #ffffff;
 	overflow-y : auto;
 	overflow-x : hidden;
+  min-height: 570px;
   border-left : 1px solid #CCCCCC;
   border-bottom : 1px solid #CCCCCC;
-  min-height: 712px;
   border-right: 1px solid #CCCCCC;
 }
 

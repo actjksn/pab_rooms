@@ -1,59 +1,58 @@
-/* $Id: print.css,v 1.8.2.1 2010/06/26 15:36:04 johnalbin Exp $ */
+body {
+   background: white;
+   font-size: 12pt;
+   margin: 0;
+   }
 
-/**
- * @file
- * Print styling
- *
- * We provide some sane print styling for Drupal using Zen's layout method.
- */
-
-
-/* underline all links */
-a:link,
-a:visited {
-  text-decoration: underline !important;
-}
-
-/* Don't underline header */
-#site-name a:link,
-#site-name a:visited {
-  text-decoration: none !important;
-}
-
-/* CSS2 selector to add visible href after links */
-#content a:link:after,
-#content a:visited:after {
-  content: " (" attr(href) ") ";
-  font-size: 0.8em;
-  font-weight: normal;
-}
-
-/* Un-float the content */
-#content,
-#content .section {
-  float: none;
-  width: 100%;
-  margin: 0 !important;
-  padding: 0 !important;
-}
-
-/* Turn off any background colors or images */
-body,
 #page-wrapper,
 #page,
 #main-wrapper,
-#main,
-#content,
-#content .section {
+#main {
+  border: 0;
+  margin: 0;
   color: #000;
   background-color: transparent !important;
   background-image: none !important;
-  display: none !important!
+  display: none !important!;
+  padding: 0;
+  float: none !important;
+}
+   
+#menu {
+   display: none;
+   }
+#wrapper, #content {
+   width: auto;
+   margin: 0 5%;
+   padding: 0;
+   border: 0;
+   float: none !important;
+   color: black;
+   background: transparent none;
+   }
+   
+/* Above is a standard template...
+ * going to try to make edits from here on.
+ */
+
+#primary_links {
+  display: none;
+  border: 0;
 }
 
+#page_wrapper {
+  border: 0;
+}
 
-#header {
-
+#logo,
+.breadcrumb,
+.title,
+.views-exposed-form,
+.view-content .calendar-calendar ul.links, 
+.date-prev,
+.date-next,
+.date-nav {
+  display: none;
 }
 
 /* Hide sidebars and nav elements */
@@ -74,8 +73,23 @@ div.tabs,
   display: none;
 }
 
-/* If you un-comment the "page { overflow-y: hidden; }" ruleset, Firefox clips
-   the content after the first page. */
-#page-wrapper {
-  overflow-y: visible;
+#footer {
+  display: none;
+}
+
+div .attachment,
+div .attachment-after{
+  width: 98%;
+}
+
+.calendar-calendar .week-view .full div.calendar-agenda-hour span {
+  padding-right: 5px;
+}
+
+.calendar-calndar .week-view table.full-header th .fri {
+  min-width: 18.5%;
+}
+
+.week-view table {
+  min-height: 600px;
 }

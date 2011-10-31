@@ -126,7 +126,7 @@
           <?php if ($index == 0 ): ?>
           <td class="first" style="width:8%">
           <?php elseif ($index == 5 ) : ?>
-          <td class="last" style="width:19%">
+          <td class="last" style="width:18.75%">
           <?php else : ?>
           <td style="width:18.25%">
           <?php endif; ?>
