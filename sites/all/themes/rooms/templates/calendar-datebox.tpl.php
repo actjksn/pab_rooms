@@ -20,7 +20,7 @@
 <?php
   // this fixes the date links for the calendar in the presence of a room being selected
   if (isset($_GET['room']) && ($_GET['room'] != 'All')) {
-    $mo = substr($url, 33, 2); // this is sort of dependent on hard coding at the moment, will have to fix based on url
+    $mo = substr($url, 50, 2); // this is sort of dependent on hard coding at the moment, will have to fix based on url
     // now setting for push, 6/2/2011
     // using pab-rooms.local, offset is 37, 2
     // for http://164.67.57.153/calendar/2011-05-31?room=2343, the offfset would be 35, 2
@@ -30,7 +30,7 @@
     print "<a href=\"/node/add/room-reservation/?edit[field_date][value][date]=".date("$mo/$day/Y")."&edit[field_date][value2][date]=".date("$mo/$day/Y")."&edit[field_room][value]=".$_GET['room']."\">$day</a>";
   }
   elseif ($_GET['room'] == 'All') {
-    print "<a href=\"/node/add/room-reservation/?edit[field_date][value][date]=".date(substr($url, 33, 2)."/$day/Y")."&edit[field_date][value2][date]=".date(substr($url, 33, 2)."/$day/Y")."\">$day</a>";
+    print "<a href=\"/node/add/room-reservation/?edit[field_date][value][date]=".date(substr($url, 50, 2)."/$day/Y")."&edit[field_date][value2][date]=".date(substr($url, 50, 2)."/$day/Y")."\">$day</a>";
   }
   else {
     print "<a href=\"/node/add/room-reservation/?edit[field_date][value][date]=".date(substr($url, -5, 2)."/$day/Y")."&edit[field_date][value2][date]=".date(substr($url, -5, 2)."/$day/Y")."\">$day</a>";
