@@ -124,7 +124,7 @@
   }
   
   th {
-    width: 8em;
+    width: 10em;
   }
   </style>
 </head>
