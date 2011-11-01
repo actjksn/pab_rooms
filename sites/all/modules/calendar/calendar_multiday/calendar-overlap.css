@@ -837,3 +837,8 @@
   cursor: s-resize;
   height : 3px;
 }
+
+/* My additions 11/1/2011 */
+#single-day-container {
+  height: 100% !important;
+}

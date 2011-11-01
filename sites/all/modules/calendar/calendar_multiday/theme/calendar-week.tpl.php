@@ -38,7 +38,7 @@ $index = 0;
       <th class="calendar-agenda-hour"><?php print t('Time')?></th>
       <?php endif;?>
       <?php foreach ($day_names as $cell): ?>
-        <th class="<?php print $cell['class']; ?>">
+        <th class="<?php// print $cell['class']; ?>">
           <?php print $cell['data']; ?>
         </th>
       <?php endforeach; ?>

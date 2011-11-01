@@ -28,13 +28,14 @@
 //dsm($rows);
 //dsm($items);
 ?>
-
 <div class="calendar-calendar"><div class="week-view">
   <div id="header-container">
   <table class="full-header">
   <tbody>
     <tr class="holder"><td class="calendar-time-holder"></td><td class="calendar-day-holder"></td><td class="calendar-day-holder"></td><td class="calendar-day-holder"></td><td class="calendar-day-holder"></td><td class="calendar-day-holder"></td><td class="calendar-day-holder"></td><td class="calendar-day-holder"></td></tr>
-    <tr>
+    
+    <!-- Commenting this out to move it into the other table..., moved to line 130 -->
+    <!-- <tr>
       <th class="calendar-agenda-hour" style="width: 2%">&nbsp;</th>
       <?php foreach ($day_names as $cell): ?>
         <?php if(($cell['data'] == 'Sat' ) || ($cell['data'] == 'Sun' ) ): break;?>
@@ -43,14 +44,18 @@
           <?php print $cell['data']; ?>
         </th>
       <?php endforeach; ?>
-    </tr>
+    </tr> -->
+    
+    
   </tbody>
   </table>
   </div>
   <div id="multi-day-container">
   <table class="full">
   <tbody>
+
   <tr class="holder"><td class="calendar-time-holder"></td><td class="calendar-day-holder"></td><td class="calendar-day-holder"></td><td class="calendar-day-holder"></td><td class="calendar-day-holder"></td><td class="calendar-day-holder"></td><td class="calendar-day-holder"></td><td class="calendar-day-holder"></td></tr>
+    
     <?php for ($i = 0; $i < $multiday_rows; $i++): ?>
     <?php 
       $colpos = 0; 
@@ -62,6 +67,7 @@
         $rowclass .= " last";
       }
     ?>
+
     <tr class="<?php print $rowclass?>">
       <?php if($i == 0 && ($by_hour_count > 0 || !empty($start_times))) :?>
       <td class="<?php print $agenda_hour_class ?>" rowspan="<?php print $multiday_rows?>">
@@ -121,6 +127,17 @@
     <table class="full">
       <tbody>
         <tr class="holder"><td class="calendar-time-holder"></td><td class="calendar-day-holder"></td><td class="calendar-day-holder"></td><td class="calendar-day-holder"></td><td class="calendar-day-holder"></td><td class="calendar-day-holder"></td><td class="calendar-day-holder"></td><td class="calendar-day-holder"></td></tr>
+        <!-- This forces the day headers into the columns. -->
+        <tr>
+          <th></th>
+          <?php foreach ($day_names as $cell): ?>
+          <?php if(($cell['data'] == 'Sat' ) || ($cell['data'] == 'Sun' ) ): break;?>
+          <?php endif; ?>
+            <th class="<?php print $cell['class']; ?>">
+              <?php print $cell['data']; ?>
+            </th>
+          <?php endforeach; ?>
+        </tr>
         <tr>
           <?php for ($index = 0; $index < 6; $index++): ?>
           <?php if ($index == 0 ): ?>
@@ -175,7 +192,7 @@
     </table>
   </div>
   <div class="single-day-footer">&nbsp;</div>
-</div></div>
+</div>
 <script>
 try {
   // Size and position the viewport inline so there are no delays
