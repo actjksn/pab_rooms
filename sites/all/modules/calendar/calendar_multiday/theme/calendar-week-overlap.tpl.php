@@ -141,11 +141,11 @@
         <tr>
           <?php for ($index = 0; $index < 6; $index++): ?>
           <?php if ($index == 0 ): ?>
-          <td class="first" style="width:8%">
+          <td class="first" style="width:10%">
           <?php elseif ($index == 5 ) : ?>
-          <td class="last" style="width:18.75%">
+          <td class="last" style="width:18%">
           <?php else : ?>
-          <td style="width:18.25%">
+          <td style="width:18%">
           <?php endif; ?>
             <?php foreach ($start_times as $time_cnt => $start_time): ?>
               <?php 
