@@ -209,10 +209,14 @@ function workspace_list_content($account) {
   $comments_enabled = module_exists('comment');
   if ($comments_enabled) {
     // If the comment module is enabled, we need to get comment counts too.
-    $sql = 'SELECT n.nid, n.uid, n.type, 0 as cid, n.title, n.status, n.changed, s.comment_count, 1 as node
+    //$sql = 'SELECT n.nid, n.uid, n.type, 0 as cid, n.title, n.status, n.changed, s.comment_count, 1 as node
+    //        FROM {node} n
+    //        LEFT JOIN {node_comment_statistics} s ON n.nid = s.nid
+    //        WHERE n.uid = %d';
+    $sql = 'SELECT n.nid, n.uid, 0 as cid, n.title, n.status, n.changed, s.comment_count, 1 as node
             FROM {node} n
             LEFT JOIN {node_comment_statistics} s ON n.nid = s.nid
-            WHERE n.uid = %d';
+            WHERE n.uid = %d';            
     $count_sql = 'SELECT COUNT(n.nid)
             FROM {node} n
             LEFT JOIN {node_comment_statistics} s ON n.nid = s.nid
@@ -220,7 +224,10 @@ function workspace_list_content($account) {
   }
   else {
     // Otherwise we use a simpler query.    
-    $sql = 'SELECT n.nid, n.uid, n.type, 0 as cid, n.title, n.status, n.changed, 1 as node
+    // $sql = 'SELECT n.nid, n.uid, n.type, 0 as cid, n.title, n.status, n.changed, 1 as node
+    //        FROM {node} n
+    //        WHERE n.uid = %d';
+    $sql = 'SELECT n.nid, n.uid, 0 as cid, n.title, n.status, n.changed, 1 as node
             FROM {node} n
             WHERE n.uid = %d';
     $count_sql = 'SELECT COUNT(n.nid)
@@ -228,11 +235,14 @@ function workspace_list_content($account) {
             WHERE n.uid = %d';
   }
 
+  // technically, this qualifies as hacking the core, but it's really just superficial changes
+  // i will comment out the original code in order to preserve the integrity in case of any issues
   $header = array(
-    array('data' => t('Type'), 'field' => 'type'),
+    //array('data' => t('Type'), 'field' => 'type'),
     array('data' => t('Title'), 'field' => 'title'),
     array('data' => t('Owner'), 'field' => 'uid'),
-    array('data' => t('Published'), 'field' => 'status'),
+    //array('data' => t('Published'), 'field' => 'status'),
+    array('data' => t('Approved'), 'field' => 'status'),
     array('data' => t('Modified'), 'field' => 'changed', 'sort' => 'desc'),
     $comments_enabled ? array('data' => t('Replies'), 'field' => 'comment_count') : array('data' => ''),
     array('data' => t('Operations'), 'colspan' => 2)
@@ -325,7 +335,7 @@ function workspace_build_rows($result, $account) {
       // The name of the owner of this node.
       $name = ($user->uid == $row->uid) ? $user->name : db_result(db_query('SELECT name FROM {users} WHERE uid = %d', $row->uid));
       $rows[] = array(
-        node_get_types('name', $row->type),
+        //node_get_types('name', $row->type),
         l($row->title, "node/$row->nid"),
         $name,
         $row->status ? $yes : $no,
