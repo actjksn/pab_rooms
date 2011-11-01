@@ -121,10 +121,11 @@
   <style type="text/css">
   td {
     white-space: nowrap;
+    padding-right: 20px;
   }
   
   th {
-    width: 10em;
+    width: 8em;
   }
   </style>
 </head>
