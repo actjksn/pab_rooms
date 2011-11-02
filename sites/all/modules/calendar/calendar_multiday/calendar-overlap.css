@@ -22,7 +22,7 @@
 
 .calendar-calendar .week-view .full div.single-day div.weekview,
 .calendar-calendar .day-view .full div.single-day div.dayview {
-  background : #FFD8C0;
+  background : #99ccff;
   width : auto;
   padding : 0px 3px;
   overflow : hidden;
@@ -30,7 +30,7 @@
 
 .calendar-calendar .week-view .full div.single-day div.weekview,
 .calendar-calendar .day-view .full div.single-day div.dayview {
-	  border : 1px solid #E39364;
+	  border : 1px solid #6699cc;
 }
 
 
