@@ -756,7 +756,7 @@
 
 .calendar-calendar .week-view div.single-day .i_0.md_0 .view-item .calendar {
     width : 140px !important;
-    margin-left: 5px;
+    margin-left: 2px;
 }
 
 .calendar-calendar .week-view div.single-day .i_0.md_1 .view-item .calendar {
@@ -842,3 +842,4 @@
 #single-day-container {
   height: 100% !important;
 }
+

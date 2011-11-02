@@ -129,7 +129,7 @@
         <tr class="holder"><td class="calendar-time-holder"></td><td class="calendar-day-holder"></td><td class="calendar-day-holder"></td><td class="calendar-day-holder"></td><td class="calendar-day-holder"></td><td class="calendar-day-holder"></td><td class="calendar-day-holder"></td><td class="calendar-day-holder"></td></tr>
         <!-- This forces the day headers into the columns. -->
         <tr>
-          <th></th>
+          <th class="spacer"></th>
           <?php foreach ($day_names as $cell): ?>
           <?php if(($cell['data'] == 'Sat' ) || ($cell['data'] == 'Sun' ) ): break;?>
           <?php endif; ?>
@@ -141,11 +141,11 @@
         <tr>
           <?php for ($index = 0; $index < 6; $index++): ?>
           <?php if ($index == 0 ): ?>
-          <td class="first" style="width:15%">
+          <td class="first">
           <?php elseif ($index == 5 ) : ?>
-          <td class="last" style="width:17%">
+          <td class="last" style="width:18%">
           <?php else : ?>
-          <td style="width: 17%">
+          <td style="width: 17.35%">
           <?php endif; ?>
             <?php foreach ($start_times as $time_cnt => $start_time): ?>
               <?php 
