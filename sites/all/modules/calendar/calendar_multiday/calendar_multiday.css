@@ -384,7 +384,7 @@ table.calendar-legend tr.even .stripe {
 .calendar-calendar .week-view .full .calendar-agenda-hour {
   width : 6%;
   min-width : 0px;
-  padding-right : 2px;
+  text-align: center;
 }
 
 .calendar-calendar .week-view .full .days {
