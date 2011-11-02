@@ -1,0 +1,11 @@
+name = Action email role
+description = "Provides an action to email all users in selected role(s)"
+package = Actions
+core = 6.x
+
+; Information added by drupal.org packaging script on 2011-06-14
+version = "6.x-1.11"
+core = "6.x"
+project = "action_email_role"
+datestamp = "1308073314"
+

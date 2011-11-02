@@ -1,0 +1,387 @@
+<?php
+
+/*
+ * @file
+ * Provides an action to email all users in selected role(s)
+ */
+
+/**
+ * Implementation of hook_action_info().
+ */
+function action_email_role_action_info() {
+  return array(
+    'action_email_role_send_email_action' => array(
+      'description' => t('Send email to all users in specified role(s) (node action)'),
+      'type' => 'node',
+      'configurable' => TRUE,
+      'hooks' => array(
+        'nodeapi' => array('view', 'insert', 'update', 'delete'),
+        'comment' => array('insert', 'update', 'delete'),
+      )
+    ),
+    'action_email_role_send_email_action_user' => array(
+      'description' => t('Send email to all users in specified role(s) (user action)'),
+      'type' => 'node',
+      'configurable' => TRUE,
+      'hooks' => array(
+        'user' => array('delete', 'insert', 'load', 'login', 'logout', 'register', 'view', 'update'),
+      )
+    ),
+    'action_email_role_send_email_action_taxonomy' => array(
+      'description' => t('Send email to all users in specified role(s) (taxonomy action)'),
+      'type' => 'taxonomy',
+      'configurable' => TRUE,
+      'hooks' => array(
+        'taxonomy' => array('delete', 'insert', 'update'),
+      )
+    ),    
+    'action_email_role_send_email_action_cron' => array(
+      'description' => t('Send email to all users in specified role(s) (cron action)'),
+      'type' => 'cron',
+      'configurable' => TRUE,
+      'hooks' => array(
+        'cron' => array('run'),
+      )
+    ),    
+  );
+}
+
+/**
+ * Return a form definition so the Send email action can be configured.
+ *
+ * @see action_email_role_send_email_action_validate()
+ * @see action_email_role_send_email_action_submit()
+ * @param $context
+ *   Default values (if we are editing an existing action instance).
+ * @return
+ *   Form definition.
+ */
+function action_email_role_send_email_action_form($context) {
+
+  // Set default values for form.
+  if (!isset($context['node_types_set'])) {
+    $context['node_types_set'] = 'all';
+  }
+  if (!isset($context['node_types_selected'])) {
+    $context['node_types_selected'] = array();
+  }
+  $form = action_email_role_send_email_action_user_form_common($context, 'node');
+  
+  // node type checkboxes
+  $node_types = node_get_types();
+  foreach ($node_types as $key => $val) {
+    $node_types[$key] = $val->name;
+  }
+
+  $form['node_types'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Send notification for specific node types'),
+    '#collapsible' => TRUE,
+    '#collapsed' => ($context['node_types_set'] == 'all'),
+  );
+
+  $form['node_types']['node_types_set'] = array(
+    '#type' => 'radios',
+    '#title' => t('Perform action for'),
+    '#options' => array(
+      'all' => t('all node types'),
+      'selected' => t('selected node types (below)'),
+    ),
+    '#default_value' => $context['node_types_set'],
+    '#required' => TRUE,
+  );
+
+  $form['node_types']['node_types_selected'] = array(
+    '#type' => 'checkboxes',
+    '#title' => t('Node types'),
+    '#default_value' => $context['node_types_selected'],
+    '#options' => $node_types,
+    '#description' => t('Select the node types this action should affect'),
+  );
+
+  return $form;
+}
+
+/**
+ * Process action_email_role_send_email_action form submissions.
+ */
+function action_email_role_send_email_action_submit($form, &$form_state) {
+  // Process the HTML form to store configuration. The keyed array that
+  // we return will be serialized to the database.
+  $params = array(
+    'recipient' => $form_state['values']['recipient'],
+    'subject'   => $form_state['values']['subject'],
+    'message'   => $form_state['values']['message'],
+    'node_types_set' => $form_state['values']['node_types_set'],
+    'node_types_selected' => $form_state['values']['node_types_selected'],
+  );
+  return $params;
+}
+
+/**
+ * 
+ * @param actions context $context
+ * @param token type to display help for $type
+ */
+function action_email_role_send_email_action_user_form_common($context, $type = array()) {
+  // Set default values for form.
+  if (!isset($context['recipient'])) {
+    $context['recipient'] = array();
+  }
+  if (!isset($context['subject'])) {
+    $context['subject'] = '';
+  }
+  if (!isset($context['message'])) {
+    $context['message'] = '';
+  }
+
+  // roles checkboxes
+  $result = db_query('SELECT * FROM {role} WHERE rid NOT IN (1)');
+  while ($role = db_fetch_object($result)) {
+    $roles[$role->rid] = $role->name;
+  }
+
+  $form['recipient'] = array(
+    '#type' => 'checkboxes',
+    '#title' => t('Recipient Roles'),
+    '#default_value' => $context['recipient'],
+    '#options' => $roles,
+    '#description' => t('Select the role(s) you would like to email'),
+    '#required' => TRUE,
+  );
+
+  // message components
+  $form['subject'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Subject'),
+    '#default_value' => $context['subject'],
+    '#maxlength' => '254',
+    '#description' => t('The subject of the message.'),
+    '#required' => TRUE,
+  );
+
+  $variables = '%site_name, %uid, %node_url, %node_type, %title, %teaser, %body'; 
+  $description = t('The message that should be sent. You may include the following variables: %variables. Not all variables will be available in all contexts.', array('%variables'=>$variables)) ;
+  if (module_exists('token')) {
+    $description .= "<br />". t('You may also use the following tokens where that token context is related to the trigger.');
+  }
+  
+  $form['message'] = array(
+    '#type' => 'textarea',
+    '#title' => t('Message'),
+    '#default_value' => $context['message'],
+    '#cols' => '50',
+    '#rows' => '20',
+    '#description' => $description,
+    '#required' => TRUE,
+  );
+  
+
+  // Display the user documentation of placeholders supported by
+  // this module, as a description on the last pattern
+  $form['token_help'] = array(
+    '#title' => t('Replacement patterns'),
+    '#type' => 'fieldset',
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
+    '#description' => t('Use -raw replacements for text to avoid problems with HTML entities.'),
+  );
+    
+  // Use the token tree if available.
+  //$doc = theme('token_tree',array($context['actions_type']));
+  $doc = theme('token_tree', array($type));
+  $form['token_help']['help'] = array('#type' => 'markup', '#value' => $doc);
+  
+  return $form;
+}
+/**
+ * Return a form definition so the Send email action can be configured.
+ *
+ * @see action_email_role_send_email_action_validate()
+ * @see action_email_role_send_email_action_submit()
+ * @param $context
+ *   Default values (if we are editing an existing action instance).
+ * @return
+ *   Form definition.
+ */
+function action_email_role_send_email_action_user_form($context) {
+  $form = action_email_role_send_email_action_user_form_common($context, 'user');
+  return $form;
+}
+
+/**
+ * Process action_email_role_send_email_action form submissions.
+ */
+function action_email_role_send_email_action_user_submit($form, &$form_state) {
+  // Process the HTML form to store configuration. The keyed array that
+  // we return will be serialized to the database.
+  $params = array(
+    'recipient' => $form_state['values']['recipient'],
+    'subject'   => $form_state['values']['subject'],
+    'message'   => $form_state['values']['message'],
+  );
+  return $params;
+}
+
+/**
+ * Implementation of a configurable Drupal action. Sends an email to specified role(s).
+ * @todo: refactor with the other similar functions
+ */
+
+function action_email_role_send_email_action_user($object, $context) {
+  $context['user'] = $object;
+  action_email_role_send_email_to_roles($object, $context);
+}
+
+
+function action_email_role_send_email_action_taxonomy_form($context) {
+  $form = action_email_role_send_email_action_user_form_common($context, 'taxonomy');
+  return $form;
+}
+
+/**
+ * Process action_email_role_send_email_action form submissions.
+ */
+function action_email_role_send_email_action_taxonomy_submit($form, &$form_state) {
+  // Process the HTML form to store configuration. The keyed array that
+  // we return will be serialized to the database.
+  $params = array(
+    'recipient' => $form_state['values']['recipient'],
+    'subject'   => $form_state['values']['subject'],
+    'message'   => $form_state['values']['message'],
+  );
+  return $params;
+}
+
+/**
+ * Implementation of a configurable Drupal action. Sends an email to specified role(s).
+ */
+function action_email_role_send_email_action_taxonomy($object, $context) {
+  $context['taxonomy'] = $object;
+  action_email_role_send_email_to_roles($object, $context);
+}
+
+function action_email_role_send_email_action_cron_form($context) {
+  $form = action_email_role_send_email_action_user_form_common($context, 'cron');
+  return $form;
+}
+
+/**
+ * Process action_email_role_send_email_action form submissions.
+ */
+function action_email_role_send_email_action_cron_submit($form, &$form_state) {
+  // Process the HTML form to store configuration. The keyed array that
+  // we return will be serialized to the database.
+  $params = array(
+    'recipient' => $form_state['values']['recipient'],
+    'subject'   => $form_state['values']['subject'],
+    'message'   => $form_state['values']['message'],
+  );
+  return $params;
+}
+
+/**
+ * Implementation of a configurable Drupal action. Sends an email to specified role(s).
+ */
+function action_email_role_send_email_action_cron($object, $context) {
+  $context['cron'] = $object; // required for token support    
+  action_email_role_send_email_to_roles($object, $context);
+}
+
+
+/**
+ * Actual worker for sending the email
+ * @param action/trigger $object
+ * @param action/trigger $content
+ */
+function action_email_role_send_email_to_roles($object, $context) {  
+  $from = variable_get('site_mail', ini_get('sendmail_from'));
+  
+  if (module_exists('token')) {
+    $context['node'] = $object;
+    $context['subject'] = str_replace(array("\r", "\n"), '', token_replace_multiple($context['subject'], $context));
+    $context['message'] = token_replace_multiple($context['message'], $context);
+  }
+  
+  $params['object'] = $object;
+  $params['context'] = $context;
+  
+  foreach ($context['recipient'] as $rid => $rname) {
+    if (!empty($rname)) {
+      $roles[] = $rid;
+    }
+  }
+  
+  $emailed = 0;
+  $recipients = action_email_role_get_role_uids($roles);
+  foreach ($recipients as $email) {
+    // @@@ 'en' shouldn't be hardcoded
+    if (drupal_mail('action_email_role', 'email_roles', $email, 'en', $params, $from)) {
+      watchdog('email_role', 'Sent email to %recipient', array('%recipient' => $email));
+      $emailed++;
+    }
+    else {
+      watchdog('email_error', 'Unable to send email to %recipient from action_email_role', array('%recipient' => $account->mail), WATCHDOG_ERROR);
+    }      
+  }
+  watchdog('email_role', "!emailed users emailed successfuly.", array('!emailed' => $emailed));  
+}
+
+/**
+ * Implementation of a configurable Drupal action. Sends an email to specified role(s).
+ */
+function action_email_role_send_email_action($object, $context) {
+  if ($context['node_types_set'] == 'all' || $context['node_types_selected'][$object->type]) {
+    $context['node'] = $object; // required for token support      
+    action_email_role_send_email_to_roles($object, $context);
+  }
+}
+
+function action_email_role_get_role_uids($roles) {
+  $result = db_query("SELECT ur. * , u.mail, u.name FROM {users_roles} ur 
+                        LEFT JOIN {users} u ON ur.uid = u.uid 
+                        WHERE ur.rid IN(%s) AND u.status = 1", implode(',', $roles));
+  
+  $email = array();
+  
+  while ($account = db_fetch_object($result)) {
+    $email[] = $account->mail;
+  }
+    
+  // if Authenticated User was in the roles to send to
+  if (in_array(2, $roles)) {
+    $result = db_query("SELECT users.mail FROM {users} 
+                          LEFT JOIN {sessions} ON sessions.uid = users.uid 
+                          WHERE users.uid != 0");
+    while ($account = db_fetch_object($result)) {
+      $email[] = $account->mail;
+    }
+  }
+
+  return $email;
+}
+/**
+ * Implementation of hook_mail().
+ */
+function action_email_role_mail($key, &$message, $params) {
+  $node = $params['object'];
+
+  $recipient = $params['context']['recipient'];
+  $subject = $params['context']['subject'];
+  $message_body = $params['context']['message'];
+  
+  $variables = array(
+    '%site_name' => variable_get('site_name', 'Drupal'),
+    '%uid' => $node->uid,
+    '%node_url' => url('node/' . $node->nid, array('absolute' => TRUE)),
+    '%node_type' => node_get_types('name', $node),
+    '%title' => check_plain($node->title),
+    '%teaser' => check_markup($node->teaser),
+    '%body' => check_markup($node->body)
+  );
+
+  $subject = strtr($subject, $variables);
+  $message['subject'] = str_replace(array("\r", "\n"), '', $subject);
+  $message['body'] = drupal_html_to_text(strtr($message_body, $variables));  
+  
+}
