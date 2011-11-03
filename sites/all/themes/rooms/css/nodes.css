@@ -83,3 +83,20 @@
 .preview .node /* Preview of the content before submitting new or updated content */ {
   /* background-color: #ffffea; */ /* Drupal core uses a #ffffea background */
 }
+
+/** FOR WORKFLOW HACKS
+ *
+ * JL 11/03/2011 */
+#workflow-info {
+  margin: 20px 0px;
+}
+
+#workflow-info ul.links li.calendar_link {
+  margin-left: -5px;
+  padding-top: 10px;
+}
+
+#workflow-info .node h2.title,
+#workflow-info span.submitted {
+  display:none;
+}
