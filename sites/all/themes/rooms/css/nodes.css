@@ -108,6 +108,15 @@
   display:none;
 }
 
+#node-8 .content p {
+  display: block;
+}
+
 .content p {
   display: none;
+}
+
+
+#block-block-6 p {
+  display: block !important;
 }
