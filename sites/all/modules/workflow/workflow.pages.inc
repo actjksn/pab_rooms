@@ -121,7 +121,6 @@ function workflow_tab_form($form_state, $node, $wid, $states, $current) {
   $form['#tab'] = TRUE;
   
   $_node = node_view($node); // HACK, ADDING IN NODE VIEW
-  print_r($_node);
   $form['workflow']['info'] = array(
   '#type=' => 'markup',
   '#value' => $_node,
