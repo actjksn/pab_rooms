@@ -121,15 +121,16 @@ function workflow_tab_form($form_state, $node, $wid, $states, $current) {
   $form['#tab'] = TRUE;
   
   $_node = node_view($node); // HACK, ADDING IN NODE VIEW
+  print_r($_node);
   $form['workflow']['info'] = array(
-  '#type' => 'markup',
+  '#type=' => 'markup',
   '#value' => $_node,
   '#prefix' => '<div id="workflow-info">',
   '#suffix' => '</div>'
   );
   
   $form['workflow']['status'] = array(
-  '#type' => 'markup',
+  '#type=' => 'markup',
   '#value' => '<p>'. t('Current state: !state', array('!state' => theme('workflow_current_state', $states[$current]))) . "</p>\n"
   );
   
