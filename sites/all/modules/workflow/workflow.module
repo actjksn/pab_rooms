@@ -338,7 +338,7 @@ function workflow_transition($node, $sid) {
  * @param $choices
  *   An array of possible target states.
  */
-function workflow_node_form(&$form, $form_state, $title, $name, $current, $choices, $timestamp = NULL, $comment = NULL, $node) {
+function workflow_node_form(&$form, $form_state, $title, $name, $current, $choices, $timestamp = NULL, $comment = NULL) {
   // No sense displaying choices if there is only one choice.
   if (sizeof($choices) == 1) {
     $form['workflow'][$name] = array(
