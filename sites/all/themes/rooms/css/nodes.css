@@ -96,7 +96,10 @@
   padding-top: 10px;
 }
 
-#workflow-info .node h2.title,
 #workflow-info span.submitted {
+  margin: 10px 0px;
+}
+
+#workflow-info .node h2.title {
   display:none;
 }
